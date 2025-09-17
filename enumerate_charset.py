@@ -42,14 +42,18 @@ def find_common_decodable_bytes(*encodings, max_length: int = 8) -> list[bytes]:
     # Proceed with caution if perfect accuracy is required.
     return common_bytes
 
-# The final list is potentially very long, so we will only show a small sample.
-print("Starting the check. This might take a while...")
-all_common_bytes = find_common_decodable_bytes('big5', 'gb2312', max_length=2)
-print("\n--- A sample of bytes decodable by both 'big5' and 'gb2312' ---")
-print(f"Total found: {len(all_common_bytes)} sequences.")
-print("First 10 items:")
-for item in all_common_bytes[:10]:
-    print(item)
-print("\nLast 10 items:")
-for item in all_common_bytes[-10:]:
-    print(item)
+def main():
+    # The final list is potentially very long, so we will only show a small sample.
+    print("Starting the check. This might take a while...")
+    all_common_bytes = find_common_decodable_bytes('big5', 'gb2312', max_length=2)
+    print("\n--- A sample of bytes decodable by both 'big5' and 'gb2312' ---")
+    print(f"Total found: {len(all_common_bytes)} sequences.")
+    print("First 10 items:")
+    for item in all_common_bytes[:10]:
+        print(item)
+    print("\nLast 10 items:")
+    for item in all_common_bytes[-10:]:
+        print(item)
+
+if __name__ == "__main__":
+    main()
