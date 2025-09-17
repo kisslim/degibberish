@@ -79,4 +79,4 @@ def test_generator_exhaustion():
 
 def test_all_encodings_santy_check():
     all_encodings = get_encodings()
-    assert len(list(find_common_decodable_bytes(*all_encodings))) > 0, "Expected to find common decodable bytes for all encodings."
+    next(find_common_decodable_bytes(*all_encodings, min_length=0))

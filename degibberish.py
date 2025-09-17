@@ -31,7 +31,18 @@ def listcodecs(dir) -> List[str]:
     return names
 
 def get_encodings():
-    return listcodecs(encodings.__path__[0])
+    allcodecs = listcodecs(encodings.__path__[0])
+    validcodecs = []
+    # try to use each codec to encode and decode
+    for codec in allcodecs:
+        try:
+            b''.decode(codec).encode(codec)
+            validcodecs.append(codec)
+        except (UnicodeDecodeError, UnicodeEncodeError, LookupError, UnicodeError) as e:
+            # codec is broken
+            print(type(e).__qualname__, codec, e)
+            pass
+    return validcodecs
 
 import itertools
 import torch
@@ -41,7 +52,7 @@ from transformers import AutoModel, AutoTokenizer, AutoModelForCausalLM
 # It's acceptable to define constants at the module level
 # as they are not mutable during execution.
 _DEFAULT_TEXT = "Hello, world! This is a test string with some special characters: é, ñ, ö, and 😊."
-_DEFAULT_ENCODINGS = listcodecs(encodings.__path__[0])
+_DEFAULT_ENCODINGS = get_encodings()
 _DEFAULT_MODEL_NAME = "fla-hub/rwkv7-0.1B-g1"
 
 # --- 2. Reusable Functions ---
