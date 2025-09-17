@@ -89,7 +89,8 @@ class Result:
         self.decoded_text = decoded_text
         self.error = error
 
-def score_encoding_pairs(text: str, model_name: str | None = None, model: torch.nn.Module | AutoModelForCausalLM | None = None, tokenizer: AutoTokenizer | None = None, encodings: list | None = None) -> Generator[EncodingPairScoringResult, None, None]:
+# use Union to make it compatible with python 3.9
+def score_encoding_pairs(text: str, model_name: Union[str, None] = None, model: Union[torch.nn.Module, AutoModelForCausalLM, None] = None, tokenizer: Union[AutoTokenizer, None] = None, encodings: Union[list, None] = None):
     """
     Enumerates all encoding/decoding pairs and scores them using a language model.
     """
