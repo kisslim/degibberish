@@ -53,7 +53,7 @@ from transformers import AutoModel, AutoTokenizer, AutoModelForCausalLM
 # as they are not mutable during execution.
 _DEFAULT_TEXT = "Hello, world! This is a test string with some special characters: é, ñ, ö, and 😊."
 _DEFAULT_ENCODINGS = get_encodings()
-_DEFAULT_MODEL_NAME = "fla-hub/rwkv7-0.1B-g1"
+_DEFAULT_MODEL_NAME = "arnir0/Tiny-LLM"
 
 # --- 2. Reusable Functions ---
 
