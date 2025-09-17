@@ -1,8 +1,10 @@
 #pytest for degibberish module 
+from itertools import combinations
 
 from degibberish import score_encoding_pairs
 from degibberish import get_encodings
 from degibberish import print_results
+
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import pytest
@@ -37,17 +39,16 @@ class TestResource:
             new_outputs = model(**new_tokens)
             assert isinstance(new_outputs['logits'], torch.Tensor)
 
-
 class TestDegibberish:
     def test_score_encoding_pairs(self, model: AutoModelForCausalLM, tokenizer: AutoTokenizer):
         text = "暗黑魔法師".encode('big5').decode('gbk') # "穞堵臸猭畍"
-        encodings = ['utf-8', 'utf-16', 'gbk', 'big5']
+        encodings = ['gbk', 'big5']
         results = list(score_encoding_pairs(text, encodings=encodings, model=model, tokenizer=tokenizer))
         assert len(results) == len(encodings) ** 2
     
     def test_score_encoding_pairs_(self, model: AutoModelForCausalLM, tokenizer: AutoTokenizer):
         text = "暗黑魔法師".encode('big5').decode('gbk') # "穞堵臸猭畍"
-        encodings = ['utf-8', 'utf-16', 'gbk', 'big5']
+        encodings = ['gbk', 'big5']
         results = list(score_encoding_pairs(text, encodings=encodings, model=model, tokenizer=tokenizer))
         assert len(results) == len(encodings) ** 2
         print_results(results)
@@ -55,6 +56,23 @@ class TestDegibberish:
         min_loss_item = min(results, key=lambda x: x['avg_token_loss'])
         assert min_loss_item['encode_A'] == 'gbk'
         assert min_loss_item['decode_B'] == 'big5'
+
+# FAILED test_degibberish.py::TestDegibberish::test_score_encoding_pairs_full - AssertionError: Expected 'gbk' and 'big5' which has the loss 18.564227294921874, but got utf_16_be and cp437 which has the loss 15.534834289550782 instead.
+    @pytest.mark.slow
+    def test_score_encoding_pairs_full(self, model: AutoModelForCausalLM, tokenizer: AutoTokenizer):
+        text = "暗黑魔法師".encode('big5').decode('gbk') # "穞堵臸猭畍"
+        encodings = get_encodings()
+        results = list(score_encoding_pairs(text, encodings=encodings, model=model, tokenizer=tokenizer))
+        assert len(results) == len(encodings) ** 2
+        print_results(results)
+        expected_loss_item = None
+        for item in results:
+            if item['encode_A'] == 'gbk' and item['decode_B'] == 'big5':
+                expected_loss_item = item
+        assert expected_loss_item is not None, f"Expected 'gbk' and 'big5', but could not find it in the results."
+        # should be gbk then big5
+        min_loss_item = min(results, key=lambda x: x['avg_token_loss'])
+        assert min_loss_item['encode_A'] == 'gbk' and min_loss_item['decode_B'] == 'big5', f"Expected 'gbk' and 'big5' which has the loss {expected_loss_item['avg_token_loss']}, but got {min_loss_item['encode_A']} and {min_loss_item['decode_B']} which has the loss {min_loss_item['avg_token_loss']} instead."
 
 # still buggy. logs:
 

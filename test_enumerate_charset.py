@@ -1,5 +1,6 @@
 import pytest
 from enumerate_charset import find_common_decodable_bytes # Replace 'your_module' with the actual file name
+from degibberish import get_encodings
 
 def test_find_common_decodable_bytes_basic_case():
     """
@@ -76,3 +77,6 @@ def test_generator_exhaustion():
 # Finally, run the tests with coverage flags: `pytest --cov=your_module --cov-report=html`
 # This generates a report showing which lines of your code were executed.
 
+def test_all_encodings_santy_check():
+    all_encodings = get_encodings()
+    assert len(list(find_common_decodable_bytes(*all_encodings))) > 0, "Expected to find common decodable bytes for all encodings."

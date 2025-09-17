@@ -53,7 +53,7 @@ def load_model_and_tokenizer(model_name: str):
         model = AutoModelForCausalLM.from_pretrained(model_name)
         return tokenizer, model
     except Exception as e:
-        print(f"Failed to load model '{model_name}': {e}")
+        log(f"Failed to load model '{model_name}': {e}")
         return None, None
 
 def calculate_token_loss(new_text: str, tokenizer, model):
@@ -133,19 +133,19 @@ def score_encoding_pairs(text: str, model_name: Union[str, None] = None, model: 
         
         # Optional: Print progress
         if error:
-            print(f"Encode with '{A}', Decode with '{B}': Error - {error}")
+            log(f"Encode with '{A}', Decode with '{B}': Error - {error}")
         else:
-            print(f"Encode with '{A}', Decode with '{B}': Loss = {loss:.4f}")
+            log(f"Encode with '{A}', Decode with '{B}': Loss = {loss:.4f}")
 
 
 def print_results(results):
     """Prints the sorted results in a user-friendly format."""
-    log("\n--- Summary of Results (Best to Worst) ---")
+    print("\n--- Summary of Results (Best to Worst) ---")
     for res in sorted(results, key=lambda x: x['avg_token_loss']):
         loss = f"{res['avg_token_loss']:.4f}" if res['avg_token_loss'] != float('inf') else "Error"
         decoded_preview = res['decoded_text'][:40] + "..." if res['decoded_text'] and len(res['decoded_text']) > 40 else res['decoded_text']
         
-        log(f"Encode: {res['encode_A']:<10} | Decode: {res['decode_B']:<10} | Avg Token Loss: {loss:<10} | Decoded: {decoded_preview if decoded_preview else 'N/A'} | Error: {res['error'] if res['error'] else 'N/A'}")
+        print(f"Encode: {res['encode_A']:<10} | Decode: {res['decode_B']:<10} | Avg Token Loss: {loss:<10} | Decoded: {decoded_preview if decoded_preview else 'N/A'} | Error: {res['error'] if res['error'] else 'N/A'}")
 
 # --- 3. Main Function ---
 
