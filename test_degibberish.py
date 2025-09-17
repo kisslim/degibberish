@@ -68,7 +68,7 @@ def test_score_encoding_pairs_full():
     assert expected_loss_item is not None, "Expected 'gbk' and 'big5', but could not find it in the results."
     # should be gbk then big5
     min_loss_item = min(results, key=lambda x: x['avg_token_loss'])
-    assert min_loss_item['encode_A'] == 'gbk' and min_loss_item['decode_B'] == 'big5', f"Expected 'gbk' and 'big5' which has the loss {expected_loss_item['avg_token_loss']}, but got {min_loss_item['encode_A']} and {min_loss_item['decode_B']} which has the loss {min_loss_item['avg_token_loss']} instead."
+    assert min_loss_item['encode_A'] == 'gbk' and min_loss_item['decode_B'] == 'big5', f"Expected 'gbk' and 'big5' which has the loss {expected_loss_item['avg_token_loss']} and decoded text {expected_loss_item['decoded_text']}, but got {min_loss_item['encode_A']} and {min_loss_item['decode_B']} which has the loss {min_loss_item['avg_token_loss']} and decoded text {min_loss_item['decoded_text']} instead."
 
 # still buggy. logs:
 
