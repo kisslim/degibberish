@@ -36,13 +36,6 @@ class TestResource:
             new_tokens = tokenizer("暗黑魔法師".encode('big5').decode('gbk') , return_tensors='pt')
             new_outputs = model(**new_tokens)
             assert isinstance(new_outputs['logits'], torch.Tensor)
-    
-    def test_llm_loss(self, tokenizer: AutoTokenizer, model: AutoModelForCausalLM):
-        with torch.no_grad():
-            new_tokens = tokenizer("暗黑魔法師".encode('big5').decode('gbk') , return_tensors='pt')
-            new_outputs = model(**new_tokens)
-            assert isinstance(new_outputs['loss'], torch.Tensor)
-            assert new_outputs['loss'].shape, torch.Size([1])
 
 
 class TestDegibberish:

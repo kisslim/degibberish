@@ -67,7 +67,7 @@ def calculate_token_loss(new_text: str, tokenizer, model):
         given_conditions = tokenized_text['input_ids'][:, :-1]
         given_attention_mask = tokenized_text['attention_mask'][:, :-1]
         predict_labels = tokenized_text['input_ids'][:, 1:]
-        model_outputs = model(given_conditions, attention_mask=given_attention_mask, labels=predict_labels)
+        model_outputs = model(given_conditions, attention_mask=given_attention_mask, labels=predict_labels, num_items_in_batch=1) # num_items_in_batch=1 is the trick to use reduction="sum"
         return float(model_outputs.loss) # default mean
 
 
@@ -126,7 +126,7 @@ def score_encoding_pairs(text: str, model_name: str | None = None, model: torch.
             'encode_A': A,
             'decode_B': B,
             'decoded_text': decoded_text,
-            'avg_token_loss': loss,
+            'avg_token_loss': loss / len(text), # tokenizer may split characters and make model easier to predict. not what we want. let's use per-char loss
             'error': error
         }
         

@@ -24,3 +24,12 @@ model_outputs
 # %%
 float(model_outputs.loss) # default mean
 # %%
+model.loss_function
+# %%
+model._loss_function
+# %%
+import torch
+with torch.no_grad():
+    model_outputs = model(given_conditions, attention_mask=given_attention_mask, labels=predict_labels, num_items_in_batch=1)
+model_outputs
+# %%
