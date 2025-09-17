@@ -1,7 +1,7 @@
 from itertools import product
 from typing import Generator
 
-def find_common_decodable_bytes(*encodings, max_length: int = 8) -> Generator[bytes]:
+def find_common_decodable_bytes(*encodings, max_length: int = 8) -> Generator[bytes, None, None]:
     """
     Finds and returns a list of byte sequences that can be decoded by all encodings.
 
