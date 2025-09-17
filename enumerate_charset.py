@@ -1,4 +1,6 @@
-def find_common_decodable_bytes() -> list[bytes]:
+from itertools import product
+
+def find_common_decodable_bytes(*encodings, max_length: int = 8) -> list[bytes]:
     """
     Finds and returns a list of byte sequences that can be decoded by
     both 'big5' and 'gb2312' encodings.
@@ -8,15 +10,16 @@ def find_common_decodable_bytes() -> list[bytes]:
     """
     common_bytes = []
     # Single-byte ASCII characters are decodable by both.
-    for b in range(128):  # 0-127
-        byte_sequence = bytes([b])
-        try:
-            byte_sequence.decode('big5')
-            byte_sequence.decode('gb2312')
-            common_bytes.append(byte_sequence)
-        except UnicodeDecodeError:
-            # If it fails, we ignore it.
-            pass
+    for byte_len in range(1, max_length + 1):
+        for bs in product(range(256), repeat=byte_len): 
+            byte_sequence = bytes(bs)
+            try:
+                for encoding in encodings:
+                    byte_sequence.decode(encoding)
+                common_bytes.append(byte_sequence)
+            except UnicodeDecodeError:
+                # If it fails, we ignore it.
+                pass
     
     # Double-byte sequences. We will test all possible two-byte combinations.
     # Note: This is an exhaustive and very slow check, but it's KISS.
@@ -41,7 +44,7 @@ def find_common_decodable_bytes() -> list[bytes]:
 
 # The final list is potentially very long, so we will only show a small sample.
 print("Starting the check. This might take a while...")
-all_common_bytes = find_common_decodable_bytes()
+all_common_bytes = find_common_decodable_bytes('big5', 'gb2312', max_length=2)
 print("\n--- A sample of bytes decodable by both 'big5' and 'gb2312' ---")
 print(f"Total found: {len(all_common_bytes)} sequences.")
 print("First 10 items:")
