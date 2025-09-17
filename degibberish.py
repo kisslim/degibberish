@@ -1,6 +1,6 @@
 import os, codecs, encodings
 import sys
-from typing import Generator, List, TypedDict
+from typing import Generator, List, TypedDict, Union
 # read environment variable
 _debug = os.environ.get('DEBUG', False)
 
@@ -77,8 +77,8 @@ class EncodingPairScoringResult(TypedDict):
     encode_A: str
     decode_B: str
     avg_token_loss: float
-    decoded_text: str | None
-    error: str | None
+    decoded_text: Union[str, None]  # str | None is not supported in python 3.9
+    error: Union[str, None]
 
     
 class Result:
