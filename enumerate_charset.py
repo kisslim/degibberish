@@ -2,8 +2,7 @@ from itertools import product
 
 def find_common_decodable_bytes(*encodings, max_length: int = 8) -> list[bytes]:
     """
-    Finds and returns a list of byte sequences that can be decoded by
-    both 'big5' and 'gb2312' encodings.
+    Finds and returns a list of byte sequences that can be decoded by all encodings.
 
     We test all possible byte combinations to find the common ones.
     This can be slow, but it's super simple and stupid, just as you asked.
